@@ -6,38 +6,40 @@ export default {
           <span>預覽產品</span>
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" @click='i=0'>&times;</span>
         </button>
     </div>
     <div class="modal-body">
       <strong class="text-">{{tempProduct.title}}</strong>
-    </div> 
+    
+       <nav aria-label="Page navigation example" >   
+       <ul class="pagination justify-content-center">
+       <li class="page-item" :class="{disabled: i === 0}">
+       <a v-if='i==0' @click.prevent='i=0' class="page-link" href="#">&laquo;</a>
+       <a v-else @click.prevent='i--' class="page-link" href="#">&laquo;</a>
+       </li>
+       <li class="page-item" :class="{disabled: i === tempProduct.imageUrl.length-1}">
+       <a v-if='i < tempProduct.imageUrl.length' @click.prevent='i++' class="page-link" href="#">&raquo;</a>
+       <a v-else @click.prevent='i == tempProduct.imageUrl.length-1' class="page-link" href="#">&raquo;</a>
+       </li>
+       </ul>
+     </nav>
+
+     </div> 
    </div>
-   <img class="img-fluid img-thumbnail" :src="tempProduct.imageUrl[0]" alt="">
+   <img class="img-fluid img-thumbnail" :src="tempProduct.imageUrl[i]" alt="" style="height:300px;width:800px;">
  </div>`,
 data(){
     return {
-      // products: '',
-      // tempProduct: { imgaeUrl:[]},
-
+      i: 0,
     }
 },
-props: ['tempProduct','api'],
-methods: { 
-    //內層del方法
+props: ['tempProduct'],
+methods: {  
     imgView() {
-      let url = `${this.api.path}${this.api.uuid}/admin/ec/product/${this.tempProduct.id}`;
-      if (this.tempProduct.id){
-      axios.delete(url).then((res) =>{
-      // this.products = res.data.data;
-      console.log(res);
-      this.$emit('update')
 
-      });
-      
-  }
-      $('#delProductModal').modal('hide');
-    },
+      // this.$emit('update',num);   
+  },
+
 }
-
 };

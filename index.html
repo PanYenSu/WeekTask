@@ -42,13 +42,7 @@
             登入
           </button>
           <br>
-          <button class="btn btn-outline-primary btn-block" type="button" @click="signout">
-            登出
-          </button>
-          <br>
-          <button class="btn btn-outline-primary btn-block" type="button" @click="getData">
-            取得資料
-          </button>
+
           <p class="mt-5 mb-3 text-muted">
             © 2020~∞ - 六角學院
           </p>
@@ -68,8 +62,8 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
   <script>
-    // UUID
-    const uuid = '7f1638b3-f468-4c9d-a7b1-49b0ae75cd3d'; // 請加入個人的 UUID
+
+    const uuid = '7f1638b3-f468-4c9d-a7b1-49b0ae75cd3d'; 
     const apiPath = 'https://course-ec-api.hexschool.io/api/';
     new Vue({
       el: '#app',
@@ -98,29 +92,6 @@
             console.log(error);
           });
         },
-        signout() {
-          // 請加入 Token
-        },
-        getData() {
-          // 取得 token 的 cookies（注意取得的時間點）
-          // 詳情請見：https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie
-          this.token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-
-          console.log(this.token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-
-          axios.get(`${apiPath}${uuid}/admin/ec/products`)
-            .then(res => {
-              console.log(res);
-            })
-          
-          // API
-          // const api = `${apiPath}${uuid}/admin/ec/products`
-          // 將 Token 加入到 Headers 內
-
-          // 請自行完成 Ajax
-          
-        }
       },
     })
   </script>

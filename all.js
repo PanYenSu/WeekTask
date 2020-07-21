@@ -1,5 +1,3 @@
-/* global Vue */
-/* eslint-disable no-new */
 import pagination from './pagination.js';
 import modal from './modal.js';
 import delmodal from './delmodal.js';
@@ -30,7 +28,16 @@ new Vue({
     },
   },
   methods: {
-    updateProduct() {},
+    updateCheckbox(item) {
+      // !this.tempProduct.enabled
+      const url = `${this.api.path}${this.api.uuid}/admin/ec/product/${item.id}`;
+      this.tempProduct = Object.assign({}, item);
+         axios.patch(url, this.tempProduct).then((res) => {
+          getProducts(); 
+          this.tempProduct = { imageUrl: [] };
+          });
+
+    },
     openModal(isNew, item) {
       switch (isNew) {
         case 'new':
@@ -38,12 +45,12 @@ new Vue({
           $('#productModal').modal('show');
           break;
         case 'edit':
-          this.loadingBtn = item.id;
+          this.loadingBtn = item.id; //btn點擊效果
           const url = `${this.api.path}${this.api.uuid}/admin/ec/product/${item.id}`;
           axios.get(url).then((res) => {
             this.tempProduct = res.data.data;
             $('#productModal').modal('show');
-            this.loadingBtn = ''; //清除
+            this.loadingBtn = ''; 
           });
           break;
         case 'del':
@@ -58,19 +65,7 @@ new Vue({
           break;
       }
     },
-    // 外層del方法
-    // delProduct() {
-    //   if (this.tempProduct.id) {
-    //     const id = this.tempProduct.id;
-    //     this.products.forEach((item, i) => {
-    //       if (item.id === id) {
-    //         this.products.splice(i, 1);
-    //         this.tempProduct = {imageUrl:[]};
-    //       }
-    //     });
-    //   }
-    //   $('#delProductModal').modal('hide');
-    // },
+
     getProducts(num = 1) {
       console.log(num);
       const url = `${this.api.path}${this.api.uuid}/admin/ec/products?page=${num}`;
@@ -81,13 +76,6 @@ new Vue({
 
         this.tempProduct = { imageUrl: [], };
         $('#productModal').modal('hide');        
-
-        // if (this.tempProduct.id) {
-        //   this.tempProduct = {
-        //     imageUrl: [],
-        //   };
-        //   $('#productModal').modal('hide');
-        // }
 
       });
     },
