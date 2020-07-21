@@ -95,7 +95,8 @@ new Vue({
       // 請加入 Token
       // var vm = this;
       const url = `${this.api.path}auth/logout`;
-          axios.post(url, this.token).then(() => {
+      axios.post(url, {api_token: this.token}).then(() => {
+          // axios.post(url, this.token).then(() => {
             // if (response.data.success) {
               // vm.$router.push('/login');
               // console.log(res);
