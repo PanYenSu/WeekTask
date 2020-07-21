@@ -22,7 +22,7 @@ new Vue({
       uuid: '7f1638b3-f468-4c9d-a7b1-49b0ae75cd3d',
       path: 'https://course-ec-api.hexschool.io/api/',
     },
-    token: '9qHKqNGdSSEyNUxuJeR1CxaUcnz8C7oSL2beY9FG7eJ6yndOettY5AoD5zbG',
+    token: 'aftLeVmFEhaHOIJLrvoLQnWXADoXd86ne0bY66r9d3LoigFvufIEhTGyfXdC',
     isNew: '',
     loadingBtn: '',
     status: {
