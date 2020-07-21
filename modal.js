@@ -3,7 +3,7 @@ export default {
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 id="exampleModalLabel" class="modal-title">
-            <span>新增產品</span>
+            <span v-if='tempProduct.id'>編輯產品</span><span v-else>新增產品</span>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -12,7 +12,7 @@ export default {
         <div class="modal-body">
           <div class="row">
             <div class="col-sm-4">
-
+          <!--
               <div class="form-group">
                 <label for="imageUrl">輸入圖片網址</label>
                 <input id="imageUrl" v-model="tempProduct.imageUrl[0]" type="text" class="form-control"
@@ -20,6 +20,22 @@ export default {
               </div>
               <img class="img-fluid" :src="tempProduct.imageUrl" alt>
             </div>
+            -->
+
+            <div v-for="i in 5" :key="i + 'img'" class="form-group">
+                    <label :for="'img' + i">輸入圖片網址</label>
+                    <input :id="'img' + i" v-model="tempProduct.imageUrl[i - 1]" type="text" class="form-control"
+                      placeholder="請輸入圖片連結">
+                  </div>
+                  <div class="form-group">
+                    <label for="customFile">
+                      或 上傳圖片
+                      <i v-if="status.fileUploading" class="fas fa-spinner fa-spin"></i>
+                    </label>    <!--403 uploadedFile = this.$refs.file.files[0]-->   <!--选择文件后，文件的名字就能直接绑定到input上-->
+                    <input id="customFile" ref="file" type="file" class="form-control" @change="uploadFile">   <!--402 uploadFile() -->
+                  </div>                <!--ref屬性直接取得input DOM元素-->  
+                  <img class="img-fluid" :src="tempProduct.imageUrl[0]" alt />
+                </div>
             
             <div class="col-sm-8">
               <div class="form-group">
@@ -93,10 +109,10 @@ export default {
     </div>`,
   data() {
     return {
-      // tempProduct: {},
+      // tempProduct: {},   
     };
   },
-  props: ['tempProduct', 'api'],
+  props: ['tempProduct', 'api', 'status'],
   methods: {
     updateProduct() {
       let url = `${this.api.path}${this.api.uuid}/admin/ec/product/${this.tempProduct.id}`;
@@ -111,13 +127,36 @@ export default {
         url = `${this.api.path}${this.api.uuid}/admin/ec/product`;
         axios.post(url, this.tempProduct)
         .then(res=> {
-          // console.log(res)
           this.$emit('update')
+        }).catch((error) => {
+          console.log(error)
         });
-        $('#productModal').modal('hide');
-
+        // $('#productModal').modal('hide');
       }
       
-    }
+    },
+    // 上傳檔案
+    uploadFile() {     //this.$refs.productModel.getProduct(this.tempProduct.id);
+      const uploadedFile = this.$refs.file.files[0];   // ref屬性(ref="file")直接取得input DOM元素  选择文件后，文件的名字就能直接绑定到input上
+      const formData = new FormData();
+      formData.append('file', uploadedFile);
+      const url = `${this.api.path}${this.api.uuid}/admin/storage`;
+      this.status.fileUploading = true;
+      axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((response) => {
+        this.status.fileUploading = false;
+        if (response.status === 200) {
+          this.tempProduct.imageUrl.push(response.data.data.path);
+        }
+      }).catch(() => {
+        console.log('上傳不可超過 2 MB');
+        this.status.fileUploading = false;
+      });
+    },
+
+
   },
 };
