@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+    <style type="text/css">
+        .completed {
+                text-decoration: line-through
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    
+<div id="app" class="container my-3">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">待辦事項</span>
+    </div>
+    <input type="text" class="form-control" placeholder="準備要做的任務" id="newTodo">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" id="addTodo" >新增</button>
+    </div>   
+  </div>
+  <div class="card text-center">
+    <ul class="list-group list-group-flush text-left" id="todoList">
+    </ul>
+    <div class="card-footer d-flex justify-content-between">
+      <span>還有 <span id="taskCount">0</span> 筆任務</span>
+      <a href="#" id="clearTask">清除所有任務</a>
+    </div>
+  </div>
+</div>
+    <script>
+//在 HTML5 中就多了 data-* attribte 這個屬性，其中的 * 就是一個可以自定義的名稱
+//例如：data-key='83' 或者是 data-item='1'
+//當我們要取得 data-* attribute 的屬性值時，利用 dataset 物件，就可以取得
+//checkbox勾選後的產生“畫線”卡很久
+let inputNewTodo = document.querySelector('#newTodo');
+let addTodoBtn = document.querySelector('#addTodo');
+let todoList = document.querySelector('#todoList');
+let taskCount = document.querySelector('#taskCount');
+let clearTaskA = document.querySelector('#clearTask');
+
+let todo = [];
+todoList.innerHTML = `<button type="button" class="close ml-auto" id=0></button>`;
+
+addTodoBtn.addEventListener('click',addTodo);
+clearTaskA.addEventListener('click', clearTaskAll);
+
+function addTodo(){
+  if(inputNewTodo.value){
+    todo.push({
+      id: Math.floor(Date.now()),     //id有參考範例程式碼              
+      task: inputNewTodo.value,
+      completed: false
+    });
+    render();
+    console.log(todo);
+  }
+}
+function render(){
+  let str = '';
+  //checkbox每一項都有布林值checked屬性，被選中為true，沒有被選中則為false。
+  todo.forEach(function(item,index){   
+    str += `<li class="list-group-item">
+<div class="d-flex">
+<div class="form-check">
+<input type="checkbox" class="form-check-input" ${item.completed ? 'checked' : ''} data-action="complete" data-id="${item.id}">
+<label class="form-check-label ${item.completed ? 'completed' : ''}" data-action="complete" data-id="${item.id}"> ${item.task}</label>
+</div>
+<button type="button" class="close ml-auto" aria-label="Close" id="${index}"}>
+<span aria-hidden="true" data-action="remove" data-id="${index}">&times;</span>
+</button>
+</div>
+</li>`
+  });
+  todoList.innerHTML = str;
+  taskCount.textContent = todo.length;
+  inputNewTodo.value = "";
+
+  let removeTask = document.querySelectorAll("button[class='close ml-auto']"); //不懂為什麼'.close ml-auto'取不到 
+  removeTask.forEach(function(btn){
+    btn.addEventListener('click',remove);
+  });
+}
+
+function remove(e){
+  let i = e.target.dataset.id;
+  todo.splice(i,1);
+  render();
+}
+
+function clearTaskAll(e){
+  // e.preventDefault();  //看到範例程式碼有這行,不懂真正的做用,還是正常執行 
+  todo = [];
+  render();
+}
+todoList.addEventListener('click', doCheck);
+
+ function doCheck(e) {
+  var action = e.target.dataset.action;   // 取得自定義屬性 data-action="complete"
+//   console.log(e.target.parentNode);
+  var id = e.target.dataset.id;
+//   var id = e.target.parentNode.dataset.id;
+//   if (action == 'remove') {
+//     // removeTodo(id)
+//     remove(e)
+//   } else 
+
+//完成改變屬性（畫線） 有參考範例程式碼 
+if (action === 'complete') {
+    todo.forEach((item) => {
+    if (id == item.id) {
+      item.completed = item.completed ? false : true;
+    }
+  })
+  render();
+  }
+}
+//remove參考範例程式碼 
+// function removeTodo(id) {
+//   var newIndex = 0;
+//   todo.forEach((item, key) => {
+//     if (id == item.id) {
+//       newIndex = key;
+//     }
+//   })
+//   todo.splice(newIndex, 1);
+//   render();
+// }
+
+//完成改變屬性（畫線） 有參考範例程式碼 
+// function completeTodo(id) {
+//   todo.forEach((item) => {
+//     if (id == item.id) {
+//       item.completed = item.completed ? false : true;
+//     }
+//   })
+//   render();
+// }
+    </script>
+    
+</body>
+</html>
