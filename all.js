@@ -1,7 +1,7 @@
 import pagination from './pagination.js';
 import modal from './modal.js';
 import delmodal from './delmodal.js';
-import imgmodal from './imgmodal.js';
+import imgmodal from './imgModal.js';
 
 Vue.component('pagination', pagination);
 Vue.component('modal', modal);
