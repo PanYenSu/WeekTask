@@ -1,11 +1,13 @@
 # WeekTask
-## 第一週主線任務 - 關注點分離
+## 第四週主線任務 - Vue 與 API 串接
 
-[第一週主線任務](https://panyensu.github.io/WeekTask/Week_01/%E4%B8%BB%E7%B7%9A%E4%BD%9C%E6%A5%AD_01_Todo.html)
+[第四週主線任務]( https://panyensu.github.io/WeekTask/login.html)
 
 
-- 用戶可以新增 Todo，新增後移除 input 的項目
-- 用戶可以刪除、完成 Todo
-- 用戶可以一鍵刪除所有任務
-
+- 製作登入驗證
+- **串接 API 並可以新增、編輯、刪除商品**
+- 商品啟用、關閉可以使用不同的顏色標示
+- 加入分頁的元件
+- 圖片預覽 modal 多圖瀏覽
+- 登出
 
