@@ -116,15 +116,17 @@ new Vue({
           quantityUpdata(id, num) {
 
           },
-          createOrder(){
+          orderForm(){
             $('#cartModal').modal('hide');
-            console.log('createOrde');
-            $('#createOrder').modal('show');
+            $('#orderFormModal').modal('show');
             
-
           },
-          submitForm() {
-            console.log('送出表單')
+          createdOrder() {
+            $('#orderFormModal').modal('hide');
+            // this.isLoading = true;
+            console.log('送出表單');
+            $('#orderSuccessModal').modal('show');
+            // this.isLoading = false;
           },
         getCartNum() {
         const url = `${this.apiPath}${this.uuid}/ec/shopping`;
