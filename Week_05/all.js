@@ -1,8 +1,7 @@
 import zh from './zh_TW.js';
 import pagination from './pagination.js';
-import cartList from './cartList.js';
 
-// Class 設定檔案
+// Class 設定檔案，自定義設定檔案，錯誤的 className
 VeeValidate.configure({
     classes: {
       valid: 'is-valid',
@@ -23,7 +22,6 @@ Vue.component('loading', VueLoading);
 //全域註冊分頁
 Vue.component('pagination', pagination);
 
-Vue.component('cartlist', cartList);
 // 姓名：必填
 // Email：須符合格式
 // 電話：必填，超過 8 碼，input type 為 tel
@@ -47,6 +45,8 @@ new Vue({
             imageUrl:[]
         },
         cartProducts: {},
+        cartTotal: 0,
+        quantity: 0,
         pagination: {},
         uuid: '7f1638b3-f468-4c9d-a7b1-49b0ae75cd3d',
         apiPath: 'https://course-ec-api.hexschool.io/api/',
@@ -63,8 +63,6 @@ new Vue({
             coupon: '',
             message: '',
         }
-
-
     },
     methods: {
         getDetailed(id) {
@@ -90,14 +88,57 @@ new Vue({
                     $('#already').modal('show');
                     this.status.loadingItem = '';
                 console.log(error.response.data.errors);
+        });
+        },
+        getCartList() {
+            this.isLoading = true;
+            const url = `${this.apiPath}${this.uuid}/ec/shopping`;
+            axios.get(url).then((res) => {
+              this.cartProducts = res.data.data;
+              console.log(this.cartProducts);
+              this.isLoading = false;
+              // 累加總金額
+              this.cartProducts.forEach((item) => {
+                this.cartTotal += item.product.price;
+              }); 
+              $('#cartModal').modal('show');
+            }).catch((error)=>{
+                this.isLoading = false;
+            console.log(error);
+            });
+          },
+          removeAllCartItem() {
 
+          },
+          removeCartItem(id) {
+
+          },
+          quantityUpdata(id, num) {
+
+          },
+          createOrder(){
+            $('#cartModal').modal('hide');
+            console.log('createOrde');
+            $('#createOrder').modal('show');
+            
+
+          },
+          submitForm() {
+            console.log('送出表單')
+          },
+        getCartNum() {
+        const url = `${this.apiPath}${this.uuid}/ec/shopping`;
+        axios.get(url).then((res) => {
+            this.cartProducts = res.data.data;
+            this.cartProducts.forEach((item) => {
+            this.quantity += item.quantity;
+            }); 
         });
         },
         getProducts(page = 1) {
             console.log(page);
             this.isLoading = true;
-            const url = `${this.apiPath}${this.uuid}/ec/products?page=${page}`;
-         
+            const url = `${this.apiPath}${this.uuid}/ec/products?page=${page}`;     
             axios.get(url).then((res) =>{                
                 this.products = res.data.data;
                 this.pagination = res.data.meta.pagination;
@@ -111,6 +152,7 @@ new Vue({
     },
     created() {
         this.getProducts();
+        this.getCartNum();
 
     }
     
