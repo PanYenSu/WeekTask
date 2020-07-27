@@ -80,12 +80,12 @@ new Vue({
                 axios.post(url, cart).then(()=>{
                     // this.status.loadingItem = '';
                     
-                    $('#addCart').modal('show'); 
+                    $('#cartAdd').modal('show'); 
                     this.status.loadingItem = ''; 
                     this.isLoading = false;                 
                 }).catch((error)=>{
                     this.isLoading = false;
-                    $('#already').modal('show');
+                    $('#cartAlready').modal('show');
                     this.status.loadingItem = '';
                 console.log(error.response.data.errors);
         });
