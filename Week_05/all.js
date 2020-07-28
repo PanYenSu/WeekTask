@@ -66,29 +66,42 @@ new Vue({
     },
     methods: {
         getDetailed(id) {
-
-
+          this.isLoading = true;
+          const url = `${this.apiPath}${this.uuid}/ec/product/${id}`;
+          axios.get(url).then((res) => {           
+            this.tempProduct = Object.assign(res.data.data);
+        //  tempProduct 的 num 沒有預設數字 因此 options 無法選擇預設欄位
+        // 故要增加這一行解決該問題 如果直接使用物件新增屬性進去是會雙向綁定失效，因此需要使用 $set
+        this.$set(this.tempProduct, 'num', 0);           
+            console.log(this.tempProduct);
+            this.isLoading = false;
+            $('#productModal').modal('show');
+          }).catch((error) => {
+            this.isLoading = false;
+            console.log(error);
+          })
         },
         addToCart(item, quantity=1) {
-            const url = `${this.apiPath}${this.uuid}/ec/shopping`;
-            this.status.loadingBtn = item.id;
+            // this.status.loadingBtn = item.id;
+            $('#productModal').modal('hide');
+            this.isLoading = true;
+            const url = `${this.apiPath}${this.uuid}/ec/shopping`;            
             const cart = {
                 product: item.id,
                 quantity,
             };
-            this.isLoading = true;
-                axios.post(url, cart).then(()=>{
-                    // this.status.loadingItem = '';
-                    
-                    $('#cartAdd').modal('show'); 
-                    this.status.loadingItem = ''; 
-                    this.isLoading = false;                 
-                }).catch((error)=>{
-                    this.isLoading = false;
-                    $('#cartAlready').modal('show');
-                    this.status.loadingItem = '';
-                console.log(error.response.data.errors);
+            console.log(cart.quantity);
+            axios.post(url, cart).then(()=>{
+                $('#cartAdd').modal('show'); 
+                // this.status.loadingItem = ''; 
+                this.isLoading = false;                 
+            }).catch((error)=>{
+                this.isLoading = false;
+                $('#cartAlready').modal('show');
+                // this.status.loadingItem = '';
+            console.log(error.response.data.errors);
         });
+        this.quantity += cart.quantity;
         },
         getCartList() {
             this.isLoading = true;
@@ -108,10 +121,35 @@ new Vue({
             });
           },
           removeAllCartItem() {
-
+            this.isLoading = true;
+            this.cartProducts = [];
+            this.cartTotal = 0;
+            $('#cartModal').modal('hide');
+            const url = `${this.apiPath}${this.uuid}/ec/shopping/all/product`;
+            axios.delete(url).then(() => {
+              this.isLoading = false;
+              $('#cartModal').modal('show');
+            }).catch((error)=>{
+              this.isLoading = false;              
+              console.log(error)
+            });
+            this.quantity = 0;
+            
           },
           removeCartItem(id) {
-
+            this.isLoading = true;
+            const url = `${this.apiPath}${this.uuid}/ec/shopping/${id}`;
+            axios.delete(url).then(() => {
+              this.isLoading = false;
+              $('#cartModal').modal('hide');
+              this.quantity = 0;
+              $('#cartModal').modal('show');
+              
+            }).catch((error)=>{
+              $('#cartModal').modal('hide');
+              this.isLoading = false;             
+              console.log(error)
+            });
           },
           quantityUpdata(id, num) {
 
