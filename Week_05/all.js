@@ -94,14 +94,15 @@ new Vue({
             axios.post(url, cart).then(()=>{
                 $('#cartAdd').modal('show'); 
                 // this.status.loadingItem = ''; 
-                this.isLoading = false;                 
+                this.isLoading = false;
+                this.quantity += cart.quantity;                 
             }).catch((error)=>{
                 this.isLoading = false;
                 $('#cartAlready').modal('show');
                 // this.status.loadingItem = '';
             console.log(error.response.data.errors);
         });
-        this.quantity += cart.quantity;
+        // this.getCartNum();
         },
         getCartList() {
             this.isLoading = true;
@@ -111,8 +112,9 @@ new Vue({
               console.log(this.cartProducts);
               this.isLoading = false;
               // 累加總金額
+              this.cartTotal = 0;
               this.cartProducts.forEach((item) => {
-                this.cartTotal += item.product.price;
+                this.cartTotal += item.product.price * item.quantity;
               }); 
               $('#cartModal').modal('show');
             }).catch((error)=>{
@@ -136,28 +138,37 @@ new Vue({
             this.quantity = 0;
             
           },
-          removeCartItem(id) {
+          removeCartItem(item, num) {
             this.isLoading = true;
-            const url = `${this.apiPath}${this.uuid}/ec/shopping/${id}`;
+            const url = `${this.apiPath}${this.uuid}/ec/shopping/${item.id}`;
+            $('#cartModal').modal('hide');
             axios.delete(url).then(() => {
-              this.isLoading = false;
               $('#cartModal').modal('hide');
-              this.quantity = 0;
-              $('#cartModal').modal('show');
-              
-            }).catch((error)=>{
-              $('#cartModal').modal('hide');
+              // console.log(item);
+              this.isLoading = false;       
+              this.getCartNum();  
+              this.getCartList();                           
+            }).catch((error)=>{             
               this.isLoading = false;             
               console.log(error)
-            });
+            });          
           },
           quantityUpdata(id, num) {
-
+            this.isLoading = true;
+            const url = `${this.apiPath}${this.uuid}/ec/shopping`;
+            const cart = {
+              product: id,
+              quantity: num,
+           };
+            axios.patch(url, cart).then(() => {
+                this.isLoading = false;
+                this.getCartList();
+                this.getCartNum();
+            });
           },
           orderForm(){
             $('#cartModal').modal('hide');
-            $('#orderFormModal').modal('show');
-            
+            $('#orderFormModal').modal('show');            
           },
           createdOrder() {
             $('#orderFormModal').modal('hide');
@@ -168,10 +179,11 @@ new Vue({
           },
         getCartNum() {
         const url = `${this.apiPath}${this.uuid}/ec/shopping`;
+        this.quantity = 0;
         axios.get(url).then((res) => {
             this.cartProducts = res.data.data;
             this.cartProducts.forEach((item) => {
-            this.quantity += item.quantity;
+            this.quantity += item.quantity;          
             }); 
         });
         },
@@ -185,7 +197,10 @@ new Vue({
                 console.log(res);
                 this.isLoading = false;
                 // console.log(page);
-            })
+            }).catch((error)=>{
+              this.isLoading = false;              
+              console.log(error)
+            });
 
         },
 

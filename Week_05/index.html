@@ -67,7 +67,7 @@
     <div class="row mt-4">
       <div v-for="(item, index) in products" :key="item.id" class="col-md-4 mb-4">
         <div class="card border-0 shadow-sm">
-          <div><a href="#" class="text-dark" @click.prevent='getDetailed(item.id)'>
+          <div><a href="#" class="text-decoration-none text-secondary" @click.prevent='getDetailed(item.id)'>
           <div style="height: 200px; background-size: cover; background-position: center"
             :style="{backgroundImage: `url(${item.imageUrl[0]})`}"></div>
           <div class="card-body">
@@ -84,7 +84,7 @@
                 {{ item.origin_price }} 元
               </div>
               <div v-else>
-                <del class="h6 ">原價 {{ item.origin_price }} 元</del>
+                <del class="h6 text-secondary">原價 {{ item.origin_price }} 元</del>
                 <h5 class="" style="display:inline; position:absolute;
                 right:80px;">
                   特價 {{ item.price }} 元
@@ -152,7 +152,7 @@
             <tbody v-if='cartProducts.length'>
               <tr v-for='item in cartProducts' :key='item.id'>
                 <td class="align-middle">
-                <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.product.id)">
+                <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.product, item.quantity)">
                   <i class="far fa-trash-alt"></i>
                 </button>
                  </td>
