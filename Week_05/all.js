@@ -22,20 +22,6 @@ Vue.component('loading', VueLoading);
 //全域註冊分頁
 Vue.component('pagination', pagination);
 
-// 姓名：必填
-// Email：須符合格式
-// 電話：必填，超過 8 碼，input type 為 tel
-// 地址：必填
-// 付款方式：WebATM、ATM、Barcode、Credit、ApplePay、GooglePay
-// 留言：非必填
-// name	string	required	消費者名稱。
-// email	string	required	消費者電子信箱。
-// tel	string	required	消費者電話。
-// address	string	required	運送地址。
-// payment	string	required	購買方式。
-// coupon	string	optional	優惠券。
-// message	string	optional	使用者備註。
-
 new Vue({
     el: '#app',
     data: {
@@ -60,13 +46,13 @@ new Vue({
             tel: '',
             address: '',
             payment: '',
-            coupon: '',
             message: '',
         }
     },
     methods: {
         getDetailed(id) {
-          this.isLoading = true;
+          this.status.loadingItem = id;
+          // this.isLoading = true;
           const url = `${this.apiPath}${this.uuid}/ec/product/${id}`;
           axios.get(url).then((res) => {           
             this.tempProduct = Object.assign(res.data.data);
@@ -74,16 +60,18 @@ new Vue({
         // 故要增加這一行解決該問題 如果直接使用物件新增屬性進去是會雙向綁定失效，因此需要使用 $set
         this.$set(this.tempProduct, 'num', 0);           
             console.log(this.tempProduct);
-            this.isLoading = false;
+            this.status.loadingItem = '';
+            // this.isLoading = false;
             $('#productModal').modal('show');
           }).catch((error) => {
-            this.isLoading = false;
+            this.status.loadingItem = '';
+            // this.isLoading = false;
             console.log(error);
           })
         },
         addToCart(item, quantity=1) {
-            this.status.loadingBtn = item.id;
-            $('#productModal').modal('hide');
+            this.status.loadingItem = item.id;
+            
             // this.isLoading = true;
             const url = `${this.apiPath}${this.uuid}/ec/shopping`;            
             const cart = {
@@ -93,12 +81,14 @@ new Vue({
             console.log(cart.quantity);
             axios.post(url, cart).then(()=>{
                 $('#cartAdd').modal('show'); 
+                $('#productModal').modal('hide');
                 this.status.loadingItem = ''; 
                 // this.isLoading = false;
                 this.quantity += cart.quantity;                 
             }).catch((error)=>{
                 // this.isLoading = false;
                 $('#cartAlready').modal('show');
+                $('#productModal').modal('hide');
                 this.status.loadingItem = '';
             console.log(error.response.data.errors);
         });
@@ -122,61 +112,74 @@ new Vue({
             console.log(error);
             });
           },
-          removeAllCartItem() {
-            this.isLoading = true;
-            this.cartProducts = [];
-            this.cartTotal = 0;
+        removeAllCartItem() {
+          this.isLoading = true;
+          this.cartProducts = [];
+          this.cartTotal = 0;
+          $('#cartModal').modal('hide');
+          const url = `${this.apiPath}${this.uuid}/ec/shopping/all/product`;
+          axios.delete(url).then(() => {
+            this.isLoading = false;
+            $('#cartModal').modal('show');
+          }).catch((error)=>{
+            this.isLoading = false;              
+            console.log(error)
+          });
+          this.quantity = 0;
+          
+        },
+        removeCartItem(item, num) {
+          this.isLoading = true;
+          const url = `${this.apiPath}${this.uuid}/ec/shopping/${item.id}`;
+          $('#cartModal').modal('hide');
+          axios.delete(url).then(() => {
             $('#cartModal').modal('hide');
-            const url = `${this.apiPath}${this.uuid}/ec/shopping/all/product`;
-            axios.delete(url).then(() => {
+            // console.log(item);
+            this.isLoading = false;       
+            this.getCartNum();  
+            this.getCartList();                           
+          }).catch((error)=>{             
+            this.isLoading = false;             
+            console.log(error)
+          });          
+        },
+        quantityUpdata(id, num) {
+          this.isLoading = true;
+          const url = `${this.apiPath}${this.uuid}/ec/shopping`;
+          const cart = {
+            product: id,
+            quantity: num,
+          };
+          axios.patch(url, cart).then(() => {
               this.isLoading = false;
-              $('#cartModal').modal('show');
-            }).catch((error)=>{
-              this.isLoading = false;              
-              console.log(error)
-            });
-            this.quantity = 0;
-            
-          },
-          removeCartItem(item, num) {
+              this.getCartList();
+              this.getCartNum();
+          });
+        },
+        orderForm(){
+          $('#cartModal').modal('hide');
+          $('#orderFormModal').modal('show');            
+        },
+        createOrder() {
             this.isLoading = true;
-            const url = `${this.apiPath}${this.uuid}/ec/shopping/${item.id}`;
-            $('#cartModal').modal('hide');
-            axios.delete(url).then(() => {
-              $('#cartModal').modal('hide');
-              // console.log(item);
-              this.isLoading = false;       
-              this.getCartNum();  
-              this.getCartList();                           
-            }).catch((error)=>{             
-              this.isLoading = false;             
-              console.log(error)
-            });          
-          },
-          quantityUpdata(id, num) {
-            this.isLoading = true;
-            const url = `${this.apiPath}${this.uuid}/ec/shopping`;
-            const cart = {
-              product: id,
-              quantity: num,
-           };
-            axios.patch(url, cart).then(() => {
+       
+            const url = `${this.apiPath}${this.uuid}/ec/orders`;            
+            axios.post(url, this.form).then((response)=>{
+               if(response.data.data.id) {
                 this.isLoading = false;
-                this.getCartList();
+                $('#orderFormModal').modal('hide');
+                console.log('送出表單');
+                console.log(response);
                 this.getCartNum();
-            });
-          },
-          orderForm(){
-            $('#cartModal').modal('hide');
-            $('#orderFormModal').modal('show');            
-          },
-          createdOrder() {
-            $('#orderFormModal').modal('hide');
-            // this.isLoading = true;
-            console.log('送出表單');
-            $('#orderSuccessModal').modal('show');
-            // this.isLoading = false;
-          },
+               }
+               $('#orderSuccessModal').modal('show');
+                              
+            }).catch((error)=>{
+                this.isLoading = false;
+            console.log(error.response.data.errors);
+        });
+           
+        },
         getCartNum() {
         const url = `${this.apiPath}${this.uuid}/ec/shopping`;
         this.quantity = 0;

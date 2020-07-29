@@ -8,8 +8,6 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css' />
     <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
     <style type="text/css">
-    
-     
         footer {
         margin-top: 50px;
         background: #212121;
@@ -20,8 +18,7 @@
         /* box-sizing: border-box; */
         /* 設定footer絕對位置在底部 */
         /* position: absolute; */
-      }
-      
+      }      
       </style>
 </head>
 <body>
@@ -30,52 +27,52 @@
     <loading :active.sync="isLoading"></loading>
     <div>
       <!-- navbar  -->
-      <div class="row">            
-          <div class="col">
-              <a class="navbar-brand text-dark" href="#"><h2>Cha Cha Bo</h2></a>
-          </div>
-          <div class="col-8">
-              <ul class="nav justify-content-center ">
-                  <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">全部商品</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-dark" href="#">NEW ITEMS</a>
-                  </li>                    
-                  <li class="nav-item">
-                      <a class="nav-link text-dark" href="#">ON SALES</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link text-dark" href="#"  @click.preventk='removeAllCartItem()'>SEARCH</a>
-                    </li>
-                  <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="false">Disabled</a>
-                  </li>
-                </ul>
-          </div>
-          <div class="col-1">               
-              <a class="navbar-brand text-dark" href="#" @click.prevent='getCartList()'>
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                </svg>
-                <span class="badge badge-light">{{quantity}}</span>
-              </a>               
-          </div>          
+    <div class="row">            
+        <div class="col">
+            <a class="navbar-brand text-dark" href="#"><h2>Cha Cha Bo</h2></a>
         </div>
-
+        <div class="col-8">
+            <ul class="nav justify-content-center ">
+                <li class="nav-item">
+                  <a class="nav-link text-dark" href="#">全部商品</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark" href="#">NEW ITEMS</a>
+                </li>                    
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#">ON SALES</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-dark" href="#"  @click.preventk='removeAllCartItem()'>SEARCH</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="false">Disabled</a>
+                </li>
+              </ul>
+        </div>
+        <div class="col-1">               
+            <a class="navbar-brand text-dark" href="#" @click.prevent='getCartList()'>
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+              </svg>
+              <span class="badge badge-light">{{quantity}}</span>
+            </a>               
+        </div>          
+      </div>
     <!-- 產品列表 start -->
     <div class="row mt-4">
       <div v-for="(item, index) in products" :key="item.id" class="col-md-4 mb-4">
         <div class="card border-0 shadow-sm">
-          <div><a href="#" class="text-decoration-none text-secondary" @click.prevent='getDetailed(item.id)'>
-          <div style="height: 200px; background-size: cover; background-position: center"
-            :style="{backgroundImage: `url(${item.imageUrl[0]})`}"></div>
+          <div>
+            <a href="#" class="text-decoration-none text-secondary" @click.prevent='getDetailed(item.id)'>
+          <div style="height: 200px; background-size: cover; background-position: center" :style="{backgroundImage: `url(${item.imageUrl[0]})`}">
+          </div></a>
           <div class="card-body">
             <span class="badge badge-secondary float-right ml-2">{{ item.category }}</span>         
                 <!--stretched-link  can't work-->
-                  <h5 class="card-title">{{ item.title }}</h5>  
-            <p class="card-text" v-html="item.content">{{ item.content }}</p>
-          </a></div>
+                <h5 class="card-title">{{ item.title }}</h5>  
+            <p class="card-text" v-html="item.content">{{ item.content }}</p>        
+           <!-- </div> -->
             <!-- <a href="#" class="btn btn-primary stretched-link">Go somewhere</a> -->
             <div class="d-flex justify-content-between align-items-baseline">
               <!-- 售價(price)欄位是可選的，因此售價若為空，就顯示原價(origin_price)
@@ -85,8 +82,7 @@
               </div>
               <div v-else>
                 <del class="h6 text-secondary">原價 {{ item.origin_price }} 元</del>
-                <h5 class="text-danger" style="display:inline; position:absolute;
-                right:80px;">
+                <h5 class="text-danger" style="display:inline; position:absolute; right:80px;">
                   特價 {{ item.price }} 元
                 </h5>
               </div>
@@ -97,25 +93,25 @@
         </div> -->
 
             <div class="card-footer d-flex">
-          <button type="button" class="btn btn-outline-secondary btn-sm" style="width:50%;" :disabled="status.loadingItem === item.id"
-            @click="getDetailed(item.id)">
+          <button type="button" class="btn btn-outline-secondary btn-sm" style="width:50%;" :disabled="status.loadingItem === item.id" @click="getDetailed(item.id)">
             <i v-if="status.loadingItem === item.id" class="spinner-grow spinner-grow-sm"></i>
             <!-- <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="status.loadingItem  === item.id"></span> -->
             查看更多
           </button>
           <button type="button" class="btn btn-outline-dark btn-sm ml-auto" style="width:50%;" :disabled='status.loadingItem === item.id' @click='addToCart(item)'>
-            <i v-if="status.loadingItem === item.id" class="spinner-grow spinner-grow-sm"></i>
+            <i v-if="status.loadingItem === item.id" class="spinner-border spinner-border-sm"></i>
             加到購物車
             <!-- <span class="spinner-border spinner-border-sm"  aria-hidden="true" v-if="status.loadingItem  === item.id"></span>   -->
           </button>
-        </div>
+            </div>
         </div> 
         </div>
+    </div>
     </div>
     <!-- 分頁 元件 -->
     <pagination :pages='pagination' @update='getProducts' class="page text-center"></pagination>
 
-    <!-- cart modal -->
+    <!-- cartList modal -->
     <div id='cartModal' class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -204,7 +200,7 @@
         </div>
     </div>
 
-     <!-- 產品詳細 Modal -->
+     <!-- 產品詳細 Modal  問題x2 -->
      <div id="productModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
      <div class="modal-dialog" role="document">
        <div class="modal-content">
@@ -217,13 +213,13 @@
            </button>
          </div>
          <div class="modal-body">
-          <img :src="tempProduct.imageUrl[0]" class="img-fluid" alt=''>
-          <!-- 輪播 (Carousel) 失敗-->
-          <!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+          <!-- <img :src="tempProduct.imageUrl[0]" class="img-fluid" alt=''> -->
+          <!-- 輪播 (Carousel) 無法實現 -->
+          <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
               <div v-for='i in tempProduct.imageUrl' :key='i' class="carousel-item active">
-           <img :src="i" class="img-fluid" alt=''>
-          </div>
+                <img :src="i" class="img-fluid" alt=''>
+             </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -233,9 +229,9 @@
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
-      </div> -->
+      </div>
 
-      <!-- blockquote 失敗 -->
+      <!-- blockquote 無法實現 -->
            <p class="font-weight-bold" v-html="tempProduct.content"></p>
            <p class="font-weight-light text-right" > - {{ tempProduct.description }}</p>
            
@@ -251,7 +247,7 @@
                {{ tempProduct.origin_price }} 元
              </div>
              <del v-if="tempProduct.price" class="h6">原價 {{ tempProduct.origin_price }} 元</del>
-             <div v-if="tempProduct.price" class="h4">
+             <div v-if="tempProduct.price" class="h4 text-danger">
                現在只要 {{ tempProduct.price }} 元
              </div>
            </div>
@@ -269,8 +265,9 @@
              小計
              <strong>{{ tempProduct.num * tempProduct.price }}</strong> 元
            </div>
-           <button type="button" class="btn btn-primary" @click="addToCart(tempProduct, tempProduct.num)">
-             <i v-if="tempProduct.id === status.loadingItem" class="fas fa-spinner fa-spin"></i>
+           <button type="button" class="btn btn-secondary ml-auto" @click="addToCart(tempProduct, tempProduct.num)">
+             <i v-if="tempProduct.id === status.loadingItem" class="spinner-border spinner-border-sm"></i>
+             <!-- <i v-if="status.loadingItem === item.id" class="spinner-grow spinner-grow-sm"></i> -->
              加到購物車
            </button>
          </div>
@@ -289,8 +286,7 @@
           </button>
         </div>
         <div class="modal-body">
-        <div class="col-md-12">
-          <!-- 表單進行驗證 -->
+        <div class="col-md-12">         
           <!-- 表單送出前進行表單驗證（必要完成），驗證內容包含：
                 姓名：必填
                 Email：須符合格式
@@ -298,10 +294,11 @@
                 地址：必填
                 付款方式：WebATM、ATM、Barcode、Credit、ApplePay、GooglePay
                 留言：非必填 -->
-          <!-- 訂單頁面 start -->
+          <!-- 表單進行驗證 -->
         <validation-observer v-slot="{ invalid }" class="col-md-6">
-          <form @submit.prevent="createdOrder">  
+          <form @submit.prevent="createOrder">  
             <div class="form-group">
+              <!-- input 驗證 -->
               <validation-provider rules="required" v-slot="{ errors, classes }" rules="required">
                 <label for="username">收件人姓名</label>
                 <input id="username" v-model="form.name" type="text" class="form-control" :class="classes">
@@ -378,12 +375,6 @@
       </div>
   </div>
 
-
-
-    
-    </div>
-  </div>
-
   <!-- 訂單送出 modal -->
   <div id='orderSuccessModal' class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -400,7 +391,6 @@
       </div>
     </div>
   </div>
-
   <!-- 加入購物車提醒 modal -->
   <div class="modal fade bd-example-modal-sm" id='cartAdd' tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -434,8 +424,7 @@
       </div>
     </div>
 
-
-</div>
+  </div>
 </div>
 <footer class="footer">
   圖片取自網路<br>無商業用途，僅供學習使用
