@@ -46,10 +46,10 @@
                       <a class="nav-link text-dark" href="#">ON SALES</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link text-dark" href="#">SEARCH</a>
+                      <a class="nav-link text-dark" href="#"  @click.preventk='removeAllCartItem()'>SEARCH</a>
                     </li>
                   <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="false">Disabled</a>
                   </li>
                 </ul>
           </div>
@@ -80,12 +80,12 @@
             <div class="d-flex justify-content-between align-items-baseline">
               <!-- 售價(price)欄位是可選的，因此售價若為空，就顯示原價(origin_price)
               售價若不為空，就顯示原價(origin_price)與售價(price) -->
-              <div v-if="!item.price" class="h5">
+              <div v-if="!item.price" class="h5" >
                 {{ item.origin_price }} 元
               </div>
               <div v-else>
                 <del class="h6 text-secondary">原價 {{ item.origin_price }} 元</del>
-                <h5 class="" style="display:inline; position:absolute;
+                <h5 class="text-danger" style="display:inline; position:absolute;
                 right:80px;">
                   特價 {{ item.price }} 元
                 </h5>
@@ -103,16 +103,11 @@
             <!-- <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" v-if="status.loadingItem  === item.id"></span> -->
             查看更多
           </button>
-          <button type="button" class="btn btn-outline-dark btn-sm ml-auto" style="width:50%;" :disabled="status.loadingItem === item.id" @click="addToCart(item)">
+          <button type="button" class="btn btn-outline-dark btn-sm ml-auto" style="width:50%;" :disabled='status.loadingItem === item.id' @click='addToCart(item)'>
             <i v-if="status.loadingItem === item.id" class="spinner-grow spinner-grow-sm"></i>
             加到購物車
             <!-- <span class="spinner-border spinner-border-sm"  aria-hidden="true" v-if="status.loadingItem  === item.id"></span>   -->
           </button>
-          <!-- <loading :active.sync="isLoading"></loading>
-          <div class="spinner-border spinner-border-sm" role="status">
-            <span class="sr-only">Loading...</span>
-          </div> -->
-
         </div>
         </div> 
         </div>

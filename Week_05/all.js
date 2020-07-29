@@ -66,25 +66,28 @@ new Vue({
     },
     methods: {
         getDetailed(id) {
-          this.isLoading = true;
+          this.status.loadingBtn = id;
+          // this.isLoading = true;
           const url = `${this.apiPath}${this.uuid}/ec/product/${id}`;
-          axios.get(url).then((res) => {           
+          axios.get(url).then((res) => {   
+            this.status.loadingItem = '';        
             this.tempProduct = Object.assign(res.data.data);
         //  tempProduct 的 num 沒有預設數字 因此 options 無法選擇預設欄位
         // 故要增加這一行解決該問題 如果直接使用物件新增屬性進去是會雙向綁定失效，因此需要使用 $set
         this.$set(this.tempProduct, 'num', 0);           
             console.log(this.tempProduct);
-            this.isLoading = false;
+            // this.isLoading = false;
             $('#productModal').modal('show');
           }).catch((error) => {
-            this.isLoading = false;
+            this.status.loadingItem = '';
+            // this.isLoading = false;
             console.log(error);
           })
         },
         addToCart(item, quantity=1) {
-            // this.status.loadingBtn = item.id;
-            $('#productModal').modal('hide');
-            this.isLoading = true;
+            this.status.loadingBtn = item.id;
+            // $('#productModal').modal('hide');
+            // this.isLoading = true;
             const url = `${this.apiPath}${this.uuid}/ec/shopping`;            
             const cart = {
                 product: item.id,
@@ -92,19 +95,22 @@ new Vue({
             };
             console.log(cart.quantity);
             axios.post(url, cart).then(()=>{
+              $('#productModal').modal('hide');
                 $('#cartAdd').modal('show'); 
-                // this.status.loadingItem = ''; 
-                this.isLoading = false;
+                this.status.loadingItem = ''; 
+                // this.isLoading = false;
                 this.quantity += cart.quantity;                 
             }).catch((error)=>{
-                this.isLoading = false;
+                // this.isLoading = false;
+                $('#productModal').modal('hide');
                 $('#cartAlready').modal('show');
-                // this.status.loadingItem = '';
+                this.status.loadingItem = '';
             console.log(error.response.data.errors);
         });
         // this.getCartNum();
         },
         getCartList() {
+          this.status.loadingItem = item.id;
             this.isLoading = true;
             const url = `${this.apiPath}${this.uuid}/ec/shopping`;
             axios.get(url).then((res) => {
